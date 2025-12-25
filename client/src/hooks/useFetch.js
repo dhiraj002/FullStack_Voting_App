@@ -1,41 +1,9 @@
 import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
 
 const useFetch = (url, options = {}, immediate = true) => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(immediate);
   const [error, setError] = useState(null);
-
-  // const fetchData = async (body = null) => {
-  //   try {
-  //     setLoading(true);
-  //     setError(null);
-
-  //     const response = await fetch(url, {
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       ...options,
-  //       body: body ? JSON.stringify(body) : null,
-  //     });
-
-  //     if (!response.ok) {
-  //       toast.error(response.message || "Request failed");
-  //       // throw new Error("Something went wrong");
-  //     }
-
-  //     const result = await response.json();
-  //     setData(result);
-  //     toast.success(result.message || "Request successful");
-  //     return result;
-  //   } catch (err) {
-  //     toast.error(err.message || "Request failed");
-  //     setError(err.message);
-  //     throw err;
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
 
   const fetchData = async (body = null) => {
     try {
@@ -59,10 +27,9 @@ const useFetch = (url, options = {}, immediate = true) => {
       }
 
       setData(result);
-      toast.success(result.message || "Request successful");
+
       return result;
     } catch (err) {
-      toast.error(err.message || "Request failed");
       setError(err.message);
       throw err;
     } finally {
@@ -76,7 +43,7 @@ const useFetch = (url, options = {}, immediate = true) => {
     // eslint-disable-next-line
   }, []);
 
-  return { data, loading, error, fetchData };
+  return { data, loading, error, fetchData, setData };
 };
 
 export default useFetch;
