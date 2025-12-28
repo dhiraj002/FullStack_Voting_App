@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import bcrypt from "bcrypt";
+import { getPasswordHash, verifyPassword } from "../utils/password";
 const userSchema = new mongoose.Schema(
   {
     name: {
@@ -14,7 +14,6 @@ const userSchema = new mongoose.Schema(
     },
     email: {
       type: String,
-
       unique: true,
       lowercase: true,
       trim: true,
@@ -50,11 +49,7 @@ userSchema.pre("save", async function (next) {
   if (!savedUser.isModified("password")) return;
 
   try {
-    //generate salt
-    const salt = await bcrypt.genSalt(10);
-
-    //hash the password
-    const hashedPassword = await bcrypt.hash(savedUser.password, salt);
+    const hashedPassword = await getPasswordHash(savedUser.password);
 
     savedUser.password = hashedPassword;
   } catch (error) {
@@ -62,9 +57,9 @@ userSchema.pre("save", async function (next) {
   }
 });
 
-userSchema.methods.comparePassword = function (userPassword) {
+userSchema.methods.comparePassword = async function (userPassword) {
   try {
-    const isMatch = bcrypt.compare(userPassword, this.password);
+    const isMatch = await verifyPassword({password: userPassword, hash: this.password});
     return isMatch;
   } catch (error) {
     throw error;
