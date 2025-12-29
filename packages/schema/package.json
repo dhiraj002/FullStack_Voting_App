@@ -1,0 +1,11 @@
+{
+  "name": "@fullstack-voting-app/schema",
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "zod": "^4.2.1"
+  },
+  "exports": {
+    "./*": "./*.js"
+  }
+}
